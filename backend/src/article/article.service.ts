@@ -8,10 +8,10 @@ import { Article } from './article.entity';
 import { IArticleRO, IArticlesRO, ICommentsRO } from './article.interface';
 import { Comment } from './comment.entity';
 import { CreateArticleDto, CreateCommentDto } from './dto';
+import { Tag } from '../tag/tag.entity';
 
 @Injectable()
 export class ArticleService {
-
   constructor(
     private readonly em: EntityManager,
     @InjectRepository(Article)
@@ -146,7 +146,23 @@ export class ArticleService {
   async create(userId: number, dto: CreateArticleDto) {
     const user = await this.userRepository.findOne({ id: userId }, { populate: ['followers', 'favorites', 'articles'] });
     const article = new Article(user, dto.title, dto.description, dto.body);
-    article.tagList.push(...dto.tagList);
+
+    let parsedTagList = dto.tagList;
+    if (typeof parsedTagList === 'string') {
+      parsedTagList = (parsedTagList as string).split(',').map(tag => tag.trim());
+    }
+
+    // Ensure new tags are stored in the tag repository
+    for (const tag of parsedTagList) {
+      let existingTag = await this.em.findOne(Tag, { tag: tag });
+      if (!existingTag) {
+        const newTag = new Tag();
+        newTag.tag = tag;
+        await this.em.persistAndFlush(newTag);
+      }
+    }
+
+    article.tagList.push(...parsedTagList);
     user.articles.add(article);
     await this.em.flush();
 
