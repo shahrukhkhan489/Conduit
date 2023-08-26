@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users">
+    <tr *ngFor="let user of users$ | async">
       <td>
         <a [href]="'/profile/' + user.username">{{ user.username }}</a>
       </td>
@@ -19,3 +19,4 @@
     </tr>
   </tbody>
 </table>
+

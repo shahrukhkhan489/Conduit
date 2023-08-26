@@ -9,6 +9,7 @@ import { UserService } from './user.service';
 })
 export class RosterComponent implements OnInit {
   users: UserData[] = [];
+  users$ = this.userService.getUsersWithStats();
 
   constructor(private userService: UserService) {}
 
@@ -17,4 +18,5 @@ export class RosterComponent implements OnInit {
       this.users = data;
     });
   }
+
 }
