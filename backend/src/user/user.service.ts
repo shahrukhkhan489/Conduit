@@ -84,7 +84,7 @@ export class UserService {
     return this.buildUserRO(user);
   }
 
-  async findAllUsersWithStats(): Promise<any> {
+async findAllUsersWithStats(): Promise<any> {
     // Join the user table with the article table on user.id and article.author_id
     const query = this.userRepository.createQueryBuilder('user')
                     .leftJoinAndSelect('user.articles', 'article');
@@ -104,11 +104,14 @@ export class UserService {
     // Group by user.id to aggregate data for each user
     query.groupBy('user.id');
 
+    // Order by totalLikes in descending order
+    query.orderBy({'SUM(article.favorites_count)': 'DESC'});
+
     // Execute the query and fetch raw results
     const usersWithStats = await query.execute();
 
     return usersWithStats;
-  }
+}
 
   generateJWT(user) {
     const today = new Date();
