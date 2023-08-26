@@ -84,6 +84,32 @@ export class UserService {
     return this.buildUserRO(user);
   }
 
+  async findAllUsersWithStats(): Promise<any> {
+    // Join the user table with the article table on user.id and article.author_id
+    const query = this.userRepository.createQueryBuilder('user')
+                    .leftJoinAndSelect('user.articles', 'article');
+
+    // Select necessary fields: user details, count of articles, sum of favorites_count, and date of the first article
+    query.select([
+        'user.id',
+        'user.username',
+        'user.email',
+        'user.bio',
+        'user.image',
+        'COUNT(article.id) as articleCount',
+        'SUM(article.favorites_count) as totalLikes',  // Corrected column name
+        'MIN(article.created_at) as firstArticleDate'  // Consistency with column naming
+    ]);
+
+    // Group by user.id to aggregate data for each user
+    query.groupBy('user.id');
+
+    // Execute the query and fetch raw results
+    const usersWithStats = await query.execute();
+
+    return usersWithStats;
+  }
+
   generateJWT(user) {
     const today = new Date();
     const exp = new Date(today);

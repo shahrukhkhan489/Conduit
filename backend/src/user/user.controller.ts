@@ -17,6 +17,11 @@ export class UserController {
 
   constructor(private readonly userService: UserService) {}
 
+  @Get('usersWithStats')
+  async findAllUsersWithStats(): Promise<any> {
+      return this.userService.findAllUsersWithStats();
+  }
+
   @Get('user')
   async findMe(@User('email') email: string): Promise<IUserRO> {
     return this.userService.findByEmail(email);
