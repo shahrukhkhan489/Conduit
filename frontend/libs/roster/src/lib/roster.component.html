@@ -1,0 +1,20 @@
+<h2>Conduit Roster</h2>
+<table>
+  <thead>
+    <tr>
+      <th>User Name</th>
+      <th>Articles Authored</th>
+      <th>Likes Received</th>
+      <th>Date of First Article</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td><a [href]="'/profile/' + user.username">{{ user.username }}</a></td>
+      <td>{{ user.articleCount }}</td>
+      <td>{{ user.totalLikes }}</td>
+      <td>{{ user.firstArticleDate | date }}</td>
+    </tr>
+  </tbody>
+</table>
+
