@@ -23,8 +23,8 @@ export const appConfig: ApplicationConfig = {
         loadChildren: () => import('@realworld/home/src/lib/home.routes').then((home) => home.HOME_ROUTES),
       },
       {
-          path: 'roster',
-          loadChildren: () => import('@realworld/roster').then(m => m.RosterModule)
+        path: 'roster',
+        loadChildren: () => import('@realworld/roster').then((m) => m.RosterModule),
       },
       {
         path: 'login',
