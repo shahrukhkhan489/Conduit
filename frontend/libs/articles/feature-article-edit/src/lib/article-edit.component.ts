@@ -9,6 +9,13 @@ import { articleActions, articleEditActions, articleQuery } from '@realworld/art
 const structure: Field[] = [
   {
     type: 'INPUT',
+    name: 'authors',
+    placeholder: 'Add Co-authors (comma-separated emails)',
+    validator: [],
+  },
+
+  {
+    type: 'INPUT',
     name: 'title',
     placeholder: 'Article Title',
     validator: [Validators.required],
@@ -58,6 +65,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   updateForm(changes: any) {
+  // TODO: Handle the addition of multiple authors based on the entered email addresses
+  // 1. Extract the comma-separated list of emails from the 'authors' field.
+  // 2. Use the entered emails to identify and associate co-authors to the article.
+
     this.store.dispatch(formsActions.updateData({ data: changes }));
   }
 

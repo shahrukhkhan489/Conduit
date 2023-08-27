@@ -27,7 +27,7 @@ export class ArticleService {
     const qb = this.articleRepository
       .createQueryBuilder('a')
       .select('a.*')
-      .leftJoin('a.author', 'u');
+      .leftJoin('a.authors', 'u');
 
     if ('tag' in query) {
       qb.andWhere({ tagList: new RegExp(query.tag) });
@@ -40,7 +40,7 @@ export class ArticleService {
         return { articles: [], articlesCount: 0 };
       }
 
-      qb.andWhere({ author: author.id });
+      qb.andWhere({ authors: author.id });
     }
 
     if ('favorited' in query) {
@@ -145,7 +145,8 @@ export class ArticleService {
 
   async create(userId: number, dto: CreateArticleDto) {
     const user = await this.userRepository.findOne({ id: userId }, { populate: ['followers', 'favorites', 'articles'] });
-    const article = new Article(user, dto.title, dto.description, dto.body);
+    const article = new Article(dto.title, dto.description, dto.body);
+    article.authors.add(user);
 
     let parsedTagList = dto.tagList;
     if (typeof parsedTagList === 'string') {
@@ -172,7 +173,30 @@ export class ArticleService {
   async update(userId: number, slug: string, articleData: any): Promise<IArticleRO> {
     const user = await this.userRepository.findOne({ id: userId }, { populate: ['followers', 'favorites', 'articles'] });
     const article = await this.articleRepository.findOne({ slug }, { populate: ['author'] });
+    
+const now = new Date();
+const timeDifference = (now.getTime() - article.lockTimestamp?.getTime() || 0) / 1000;  // in seconds
+
+if (timeDifference < 300) {  // 5 minutes in seconds
+    throw new HttpException('Article is locked by another author.', HttpStatus.LOCKED);
+}
+
+
     wrap(article).assign(articleData);
+    
+article.lockTimestamp = new Date();
+await this.articleRepository.persistAndFlush(article);
+
+    
+if (articleData.addAuthors) {
+    for (const authorEmail of articleData.addAuthors) {
+        const author = await this.userRepository.findOne({ email: authorEmail });
+        if (author) {
+            article.authors.add(author);
+        }
+    }
+}
+
     await this.em.flush();
 
     return { article: article.toJSON(user) };

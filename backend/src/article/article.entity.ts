@@ -31,8 +31,8 @@ export class Article {
   @Property({ type: ArrayType })
   tagList: string[] = [];
 
-  @ManyToOne()
-  author: User;
+  @ManyToMany(() => User)
+  authors = new Collection<User>(this);
 
   @OneToMany(() => Comment, comment => comment.article, { eager: true, orphanRemoval: true })
   comments = new Collection<Comment>(this);
@@ -40,8 +40,13 @@ export class Article {
   @Property()
   favoritesCount = 0;
 
-  constructor(author: User, title: string, description: string, body: string) {
-    this.author = author;
+  
+@Property({ nullable: true })
+lockTimestamp?: Date;
+
+
+  constructor(title: string, description: string, body: string) {
+    
     this.title = title;
     this.description = description;
     this.body = body;

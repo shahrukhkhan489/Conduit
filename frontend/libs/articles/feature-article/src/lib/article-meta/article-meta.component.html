@@ -1,13 +1,13 @@
 <div class="article-meta">
-  <a [routerLink]="['/profile', article.author.username]">
-    <img [src]="article.author.image" />
+  <ng-container *ngFor="let author of article.authors; let last = last">
+    <img [src]="author.image" />
   </a>
   <div class="info">
-    <a class="author" [routerLink]="['/profile', article.author.username]">
-      {{ article.author.username }}
+    <a class="author" [routerLink]="['/profile', author.username]">
+      {{ author.username }}
     </a>
     <span class="date">{{ article.createdAt | date: 'longDate' }}</span>
-  </div>
+  </div></ng-container>
 
   <span [hidden]="!canModify">
     <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/editor', article.slug]">
@@ -30,7 +30,7 @@
     >
       <i class="ion-plus-round"></i>
       &nbsp; {{ article.author.following ? 'Unfollow' : 'Follow' }}
-      {{ article.author.username }}
+      {{ author.username }}
     </button>
     &nbsp;&nbsp;
     <button
@@ -46,4 +46,4 @@
       <span class="counter">({{ article.favoritesCount }})</span>
     </button>
   </span>
-</div>
+</div></ng-container>
