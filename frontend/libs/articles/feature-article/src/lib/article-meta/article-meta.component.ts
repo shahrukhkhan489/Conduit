@@ -29,10 +29,10 @@ export class ArticleMetaComponent {
   }
 
   toggleFollow() {
-    if (this.article.author.following) {
-      this.unfollow.emit(this.article.author.username);
+    if (this.article.authors[0].following) {
+      this.unfollow.emit(this.article.authors[0].username);
     } else {
-      this.follow.emit(this.article.author.username);
+      this.follow.emit(this.article.authors[0].username);
     }
   }
 

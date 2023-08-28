@@ -1,18 +1,18 @@
 <div class="article-meta">
   <ng-container *ngFor="let author of article.authors; let last = last">
     <img [src]="author.image" />
-  </a>
+  </a>-->
   <div class="info">
-    <a class="author" [routerLink]="['/profile', author.username]">
+    <!--<a class="author" [routerLink]="['/profile', author.username]">
       {{ author.username }}
-    </a>
+    </a>-->
     <span class="date">{{ article.createdAt | date: 'longDate' }}</span>
-  </div></ng-container>
+  </div><!--</ng-container>-->
 
   <span [hidden]="!canModify">
-    <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/editor', article.slug]">
+    <!--<a class="btn btn-sm btn-outline-secondary" [routerLink]="['/editor', article.slug]">
       <i class="ion-edit"></i> Edit Article
-    </a>
+    </a>-->
 
     <button class="btn btn-sm btn-outline-danger" (click)="deleteArticle()">
       <i class="ion-trash-a"></i> Delete Article
@@ -46,4 +46,4 @@
       <span class="counter">({{ article.favoritesCount }})</span>
     </button>
   </span>
-</div></ng-container>
+</div><!--</ng-container>-->

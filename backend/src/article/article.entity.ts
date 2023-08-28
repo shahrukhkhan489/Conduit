@@ -1,8 +1,8 @@
-import { ArrayType, Collection, Entity, EntityDTO, ManyToOne, OneToMany, PrimaryKey, Property, wrap } from '@mikro-orm/core';
+import { ManyToMany, ArrayType, Collection, Entity, EntityDTO, ManyToOne, OneToMany, PrimaryKey, Property, wrap } from '@mikro-orm/core';
 import slug from 'slug';
 
-import { User } from '../user/user.entity';
-import { Comment } from './comment.entity';
+import { ManyToMany, User } from '../user/user.entity';
+import { ManyToMany, Comment } from './comment.entity';
 
 @Entity()
 export class Article {
@@ -56,7 +56,7 @@ lockTimestamp?: Date;
   toJSON(user?: User) {
     const o = wrap<Article>(this).toObject() as ArticleDTO;
     o.favorited = user && user.favorites.isInitialized() ? user.favorites.contains(this) : false;
-    o.author = this.author.toJSON(user);
+    o.author = this.authors.map(author => author.toJSON(user));
 
     return o;
   }

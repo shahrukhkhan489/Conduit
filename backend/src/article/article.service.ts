@@ -51,7 +51,7 @@ export class ArticleService {
       }
 
       const ids = author.favorites.$.getIdentifiers();
-      qb.andWhere({ author: ids });
+      qb.andWhere({ authors: ids });
     }
 
     qb.orderBy({ createdAt: QueryOrder.DESC });
@@ -73,8 +73,8 @@ export class ArticleService {
 
   async findFeed(userId: number, query): Promise<IArticlesRO> {
     const user = userId ? await this.userRepository.findOne(userId, { populate: ['followers', 'favorites'] }) : undefined;
-    const res = await this.articleRepository.findAndCount({ author: { followers: userId } }, {
-      populate: ['author'],
+    const res = await this.articleRepository.findAndCount({ authors: { followers: userId } }, {
+      populate: ['authors'],
       orderBy: { createdAt: QueryOrder.DESC },
       limit: query.limit,
       offset: query.offset,
@@ -86,12 +86,12 @@ export class ArticleService {
 
   async findOne(userId: number, where): Promise<IArticleRO> {
     const user = userId ? await this.userRepository.findOneOrFail(userId, { populate: ['followers', 'favorites'] }) : undefined;
-    const article = await this.articleRepository.findOne(where, { populate: ['author'] });
+    const article = await this.articleRepository.findOne(where, { populate: ['authors'] });
     return { article: article && article.toJSON(user) };
   }
 
   async addComment(userId: number, slug: string, dto: CreateCommentDto) {
-    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['author'] });
+    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['authors'] });
     const author = await this.userRepository.findOneOrFail(userId);
     const comment = new Comment(author, article, dto.body);
     await this.em.persistAndFlush(comment);
@@ -100,7 +100,7 @@ export class ArticleService {
   }
 
   async deleteComment(userId: number, slug: string, id: number): Promise<IArticleRO> {
-    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['author'] });
+    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['authors'] });
     const user = await this.userRepository.findOneOrFail(userId);
     const comment = this.commentRepository.getReference(id);
 
@@ -113,7 +113,7 @@ export class ArticleService {
   }
 
   async favorite(id: number, slug: string): Promise<IArticleRO> {
-    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['author'] });
+    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['authors'] });
     const user = await this.userRepository.findOneOrFail(id, { populate: ['favorites', 'followers'] });
 
     if (!user.favorites.contains(article)) {
@@ -126,7 +126,7 @@ export class ArticleService {
   }
 
   async unFavorite(id: number, slug: string): Promise<IArticleRO> {
-    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['author'] });
+    const article = await this.articleRepository.findOneOrFail({ slug }, { populate: ['authors'] });
     const user = await this.userRepository.findOneOrFail(id, { populate: ['followers', 'favorites'] });
 
     if (user.favorites.contains(article)) {
@@ -172,7 +172,7 @@ export class ArticleService {
 
   async update(userId: number, slug: string, articleData: any): Promise<IArticleRO> {
     const user = await this.userRepository.findOne({ id: userId }, { populate: ['followers', 'favorites', 'articles'] });
-    const article = await this.articleRepository.findOne({ slug }, { populate: ['author'] });
+    const article = await this.articleRepository.findOne({ slug }, { populate: ['authors'] });
     
 const now = new Date();
 const timeDifference = (now.getTime() - article.lockTimestamp?.getTime() || 0) / 1000;  // in seconds

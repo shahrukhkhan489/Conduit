@@ -22,7 +22,7 @@ export const articleInitialState: ArticleState = {
     updatedAt: '',
     favorited: false,
     favoritesCount: 0,
-    author: {
+    authors: [ {
       username: '',
       bio: '',
       image: '',
@@ -74,7 +74,7 @@ export const articleFeature = createFeature({
       comments: articleInitialState.comments,
     })),
     on(articleActions.followSuccess, articleActions.unfollowSuccess, (state, action) => {
-      const data: Article = { ...state.data, author: action.profile };
+      const data: Article = { ...state.data, authors: [ action.profile };
       return { ...state, data };
     }),
     on(articlesActions.favoriteSuccess, articlesActions.unfavoriteSuccess, (state, action) => ({
