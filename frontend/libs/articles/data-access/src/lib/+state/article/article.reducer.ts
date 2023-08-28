@@ -9,7 +9,7 @@ export interface ArticleState {
   comments: Comment[];
   loading: boolean;
   loaded: boolean;
-}
+};
 
 export const articleInitialState: ArticleState = {
   data: {
@@ -28,7 +28,7 @@ export const articleInitialState: ArticleState = {
       image: '',
       following: false,
       loading: false,
-    },
+    } ],
   },
   comments: [],
   loaded: false,
@@ -74,7 +74,7 @@ export const articleFeature = createFeature({
       comments: articleInitialState.comments,
     })),
     on(articleActions.followSuccess, articleActions.unfollowSuccess, (state, action) => {
-      const data: Article = { ...state.data, authors: [ action.profile };
+      const data: Article = { ...state.data, authors: [ action.profile ] };
       return { ...state, data };
     }),
     on(articlesActions.favoriteSuccess, articlesActions.unfavoriteSuccess, (state, action) => ({
