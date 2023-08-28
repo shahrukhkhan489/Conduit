@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { EntityManager, QueryOrder, wrap } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityRepository } from '@mikro-orm/mysql';
@@ -178,7 +178,7 @@ const now = new Date();
 const timeDifference = (now.getTime() - article.lockTimestamp?.getTime() || 0) / 1000;  // in seconds
 
 if (timeDifference < 300) {  // 5 minutes in seconds
-    throw new HttpException('Article is locked by another author.', HttpStatus.LOCKED);
+    throw new HttpException('Article is locked by another author.', 423);
 }
 
 
