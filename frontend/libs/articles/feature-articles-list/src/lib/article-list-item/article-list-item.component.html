@@ -1,36 +1,28 @@
-<div class="article-preview">
-  <div class="article-meta">
-    <a>
-      <img [src]="article.authors[0].image" />
-    </a>
-    <div class="info">
-      <a data-e2e-id="article-author" class="author" [routerLink]="['/profile', article.authors[0].username]">
-        {{ article.authors[0].username }}
+<div *ngIf="article">
+  <div class="article-preview">
+    <div class="article-meta">
+      <a [routerLink]="['/profile', article?.author?.username]">
+        <img [src]="article?.author?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" alt="author image">
       </a>
-      <span class="date">
-        {{ article.createdAt | date: 'longDate' }}
-      </span>
+      <div class="info">
+        <a [routerLink]="['/profile', article?.author?.username]" class="author">
+          {{ article?.author?.username }}
+        </a>
+        <span class="date">
+          {{ article?.createdAt | date: 'mediumDate' }}
+        </span>
+      </div>
+      <button (click)="toggleFavorite()" class="btn btn-outline-primary btn-sm pull-xs-right">
+        <i class="ion-heart"></i> {{ article?.favoritesCount }}
+      </button>
     </div>
-    <button
-      [ngClass]="{
-        'btn-outline-primary': !article.favorited,
-        'btn-primary': article.favorited
-      }"
-      class="btn btn-sm pull-xs-right"
-      (click)="toggleFavorite(article)"
-    >
-      <i class="ion-heart"></i>
-      <div class="info">{{ article.favoritesCount }}</div>
-    </button>
+    <a [routerLink]="['/article', article?.slug]" class="preview-link">
+      <h1>{{ article?.title }}</h1>
+      <p>{{ article?.description }}</p>
+      <span>Read more...</span>
+      <ul class="tag-list">
+        <li *ngFor="let tag of article?.tagList" class="tag-default tag-pill tag-outline">{{ tag }}</li>
+      </ul>
+    </a>
   </div>
-  <a (click)="navigateToArticle.emit(article.slug)" class="preview-link">
-    <h1 data-e2e-id="article-list-title">{{ article.title }}</h1>
-    <p>{{ article.description }}</p>
-    <span>Read more...</span>
-    <ul class="tag-list">
-      <li class="tag-default tag-pill tag-outline" *ngFor="let tag of article.tagList">
-        {{ tag }}
-      </li>
-    </ul>
-  </a>
 </div>
