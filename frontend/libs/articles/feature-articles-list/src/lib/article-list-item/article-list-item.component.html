@@ -2,14 +2,17 @@
   <div class="article-preview">
     <div class="article-meta">
       <a [routerLink]="['/profile', article?.author?.username]">
-        <img [src]="article?.author?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" alt="author image">
+        <img
+          [src]="article?.author?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'"
+          alt="author image"
+        />
       </a>
       <div class="info">
         <a [routerLink]="['/profile', article?.author?.username]" class="author">
           {{ article?.author?.username }}
         </a>
         <span class="date">
-          {{ article?.createdAt | date: 'mediumDate' }}
+          {{ article?.createdAt | date : 'mediumDate' }}
         </span>
       </div>
       <button (click)="toggleFavorite()" class="btn btn-outline-primary btn-sm pull-xs-right">

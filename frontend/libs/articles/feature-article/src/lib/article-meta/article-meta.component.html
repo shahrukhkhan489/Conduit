@@ -17,15 +17,15 @@
     </span>
     <span [hidden]="canModify">
       <button
-          class="btn btn-sm action-btn"
-          [ngClass]="{
-              'btn-outline-secondary': !author?.following,
-              'btn-secondary': author?.following
-          }"
-          (click)="toggleFollow()"
+        class="btn btn-sm action-btn"
+        [ngClass]="{
+          'btn-outline-secondary': !author?.following,
+          'btn-secondary': author?.following
+        }"
+        (click)="toggleFollow()"
       >
-          <i class="ion-plus-round"></i> &nbsp; {{ author?.following ? 'Unfollow' : 'Follow' }}
-          {{ author.username }}
+        <i class="ion-plus-round"></i> &nbsp; {{ author?.following ? 'Unfollow' : 'Follow' }}
+        {{ author.username }}
       </button>
       &nbsp;&nbsp;
       <button
